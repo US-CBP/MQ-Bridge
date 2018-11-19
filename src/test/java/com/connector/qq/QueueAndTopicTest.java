@@ -9,24 +9,24 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.test.context.junit4.SpringRunner;
 
-    @RunWith(SpringRunner.class)
-    @SpringBootTest
-    public class QueueAndTopicTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class QueueAndTopicTest {
 
-        @Autowired
-        private JmsTemplate queueTemplate;
-        @Autowired
-        private JmsTemplate topicTemplate;
-        @Autowired
-        private JMSAltConfig altConfig;
+    @Autowired
+    private JmsTemplate queueTemplate;
+    @Autowired
+    private JmsTemplate topicTemplate;
+    @Autowired
+    private JMSAltConfig altConfig;
 
-        private String queue = "ONE.REQ";
-        private String topic = "ONE/TOPIC";
+    private String queue = "ONE.REQ";
+    private String topic = "ONE/TOPIC";
 
 
-        @Test
-        public void testQQ(){
-            JmsTemplate jmsTemp = altConfig.queueTemplate(new MQQueueConnectionFactory());
-        }
-
+    @Test
+    public void testQQ(){
+        JmsTemplate jmsTemp = altConfig.queueTemplate(new MQQueueConnectionFactory());
     }
+
+}

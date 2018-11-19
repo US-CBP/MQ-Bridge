@@ -1,6 +1,5 @@
 package com.connector.qq.model;
 
-import javax.jms.Message;
 import java.io.Serializable;
 
 public class MessagePayload implements Serializable {

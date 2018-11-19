@@ -2,6 +2,7 @@ package com.connector.qq.rest;
 
 import com.connector.qq.model.MessagePayload;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -32,13 +33,13 @@ public class RestTemplateTest {
 
 
     @Test
-    public void testRestTemplateWithPostPayload(String payload) {
+    @Ignore
+    public void testRestTemplateWithPostPayload() {
 
         RestTemplate restTemplate = new RestTemplate();
 //        rt.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 //        rt.getMessageConverters().add(new StringHttpMessageConverter());
         MessagePayload messagePayload = new MessagePayload();
-        messagePayload.setMessagePayload(payload);
 
 
 //        String plainCreds = "user@awesome.com:sfdfsdf$%&^$%4";
