@@ -1,14 +1,10 @@
 package com.connector.qq;
 
-import javax.jms.MessageListener;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.listener.SimpleMessageListenerContainer;
 
 import com.ibm.mq.jms.MQQueueConnectionFactory;
 import com.ibm.mq.jms.MQTopicConnectionFactory;
@@ -32,9 +28,6 @@ public class JMSAltConfig {
     @Value("${servers.mq.timeout}")
     private long timeout;
 
-    @Autowired
-    private QQListener qqListener;
-
     @Bean
     public MQTopicConnectionFactory mqTopicConnectionFactory() {
         MQTopicConnectionFactory mqTopicConnectionFactory = new MQTopicConnectionFactory();
@@ -52,7 +45,7 @@ public class JMSAltConfig {
     }
 
     @Bean
-    @Primary
+    @Qualifier("QueueManager")
     public MQQueueConnectionFactory mqQueueConnectionFactory() {
         MQQueueConnectionFactory mqQueueConnectionFactory = new MQQueueConnectionFactory();
         try {
@@ -60,36 +53,11 @@ public class JMSAltConfig {
             mqQueueConnectionFactory.setQueueManager(queueManager);
             mqQueueConnectionFactory.setPort(port);
             mqQueueConnectionFactory.setChannel(channel);
-            //mqQueueConnectionFactory.setAppName(System.getProperty("user.name"));
             mqQueueConnectionFactory.setTransportType(WMQConstants.WMQ_CM_CLIENT);
-            //mqQueueConnectionFactory.setCCSID(1208);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return mqQueueConnectionFactory;
-    }
-
-    @Bean
-    public SimpleMessageListenerContainer queueContainer(MQQueueConnectionFactory mqQueueConnectionFactory) {
-        MessageListener listener = qqListener;
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(mqQueueConnectionFactory);
-        container.setDestinationName(queue);
-        container.setMessageListener(listener);
-        container.start();
-        return container;
-    }
-
-    //@Bean
-    public SimpleMessageListenerContainer topicContainer(MQTopicConnectionFactory mqTopicConnectionFactory) {
-        MessageListener listener = qqListener;
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(mqTopicConnectionFactory);
-        container.setDestinationName(topic);
-        container.setPubSubDomain(true);
-        container.setMessageListener(listener);
-        container.start();
-        return container;
     }
 
     @Bean

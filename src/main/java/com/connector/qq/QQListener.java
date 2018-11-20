@@ -4,13 +4,13 @@ import com.connector.qq.rest.RestTemplatePush;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 import javax.jms.Message;
-import javax.jms.MessageListener;
 
 @Component
-public class QQListener implements MessageListener {
+public class QQListener {
 
     private static final Logger logger = LoggerFactory
             .getLogger(QQListener.class);
@@ -24,6 +24,7 @@ public class QQListener implements MessageListener {
         this.fileReader = fileReader;
     }
 
+    @JmsListener(destination = "${servers.mq.queue}")
     public void onMessage(Message message) {
         try {
             fileReader.writeFile(message);
