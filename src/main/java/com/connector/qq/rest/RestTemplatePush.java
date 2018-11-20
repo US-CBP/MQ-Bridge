@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
@@ -32,18 +33,13 @@ public class RestTemplatePush {
     private String tokenUrl;
 
 
-    public void pushQMessage(Message payload){
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            MessagePayload messagePayload = new MessagePayload();
-            messagePayload.setMessagePayload(((TextMessage) payload).getText());
-            HttpHeaders headers = new HttpHeaders();
-            headers.set(API_KEY, apiValue);
-            HttpEntity<MessagePayload> request = new HttpEntity<>(messagePayload, headers);
-            restTemplate.postForEntity(baseUrl, request, String.class);
-        }catch (Exception ex){
-            logger.error("Error posting payload"+ ex.getCause());
-            ex.printStackTrace();
-        }
+    public void pushQMessage(Message payload) throws JMSException {
+        RestTemplate restTemplate = new RestTemplate();
+        MessagePayload messagePayload = new MessagePayload();
+        messagePayload.setMessagePayload(((TextMessage) payload).getText());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(API_KEY, apiValue);
+        HttpEntity<MessagePayload> request = new HttpEntity<>(messagePayload, headers);
+        restTemplate.postForEntity(baseUrl, request, String.class);
     }
 }

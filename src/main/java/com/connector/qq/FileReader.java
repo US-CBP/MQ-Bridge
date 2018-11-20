@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
@@ -22,13 +23,19 @@ public class FileReader {
     @Value("${archive.folder}")
     private String IN_FOLDER;
 
+    @Value("${failLog.folder}")
+    private String ERROR_FOLDER;
+
     @Value("${archive.on}")
     private Boolean archivingToDisk;
 
+    @Value("${failLog.on}")
+    private Boolean failLogOn;
 
-    public void writeFile( Message strContent ) {
+
+    void archiveFile(Message strContent) {
         logger.debug("************************* FILE Received ************************");
-        if(archivingToDisk) {
+        if (archivingToDisk) {
             logger.debug("ARCHIVING FILE");
             File destFolder = new File(IN_FOLDER);
             checkAndMoveFiles(destFolder, strContent);
@@ -36,33 +43,34 @@ public class FileReader {
         logger.debug("************************* FILE FINISHED ************************");
     }
 
+    void writeErrorFile(Message strContent) {
+        logger.debug("In Write Error File");
+        if (failLogOn) {
+            logger.debug("ARCHIVING FAILURE FILE");
+            File destFolder = new File(ERROR_FOLDER);
+            checkAndMoveFiles(destFolder, strContent);
+        }
+    }
+
     private void checkAndMoveFiles(File folder, Message strContent) {
-        BufferedWriter bufferedWriter = null;
-        BufferedWriter out = null;
-        try {
-            FileSystem fromFileSystem = FileSystems.getDefault();
-            Path moveTo = fromFileSystem.getPath(folder
-                    .getPath()
-                    + File.separator
-                    + strContent.getJMSMessageID().substring(4)+"APIs");
-            //out = Files.newBufferedWriter(moveTo);
-            out = new BufferedWriter(new FileWriter(String.valueOf(moveTo)));
-            out.write(((TextMessage) strContent).getText());
+        try (FileSystem fromFileSystem = FileSystems.getDefault();
+             BufferedWriter out =
+                     new BufferedWriter(makeFileWriter(folder, strContent, fromFileSystem))
+        ) {
+            TextMessage textMessage = (TextMessage) strContent;
+            out.write(textMessage.getText());
             out.flush();
-
-        } catch (IOException e) {
-        }
-        catch (Exception e) {
-
+        } catch (Exception e) {
             logger.info("Exception saving message file"
-                    + e.getMessage());
+                    , e);
         }
-        finally{
-            try{
-                if(bufferedWriter != null) bufferedWriter.close();
-            } catch(Exception ex){
+    }
 
-            }
-        }
+    private FileWriter makeFileWriter(File folder, Message strContent, FileSystem fromFileSystem) throws JMSException, IOException {
+        Path path = fromFileSystem.getPath(folder.getPath()
+                + File.separator
+                + strContent.getJMSMessageID().substring(4) + "APIs");
+        String stingValueOfPath = String.valueOf(path);
+        return new FileWriter(stingValueOfPath);
     }
 }

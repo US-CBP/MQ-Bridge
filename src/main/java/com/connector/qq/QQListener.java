@@ -27,14 +27,15 @@ public class QQListener {
     @JmsListener(destination = "${servers.mq.queue}")
     public void onMessage(Message message) {
         try {
-            fileReader.writeFile(message);
+            fileReader.archiveFile(message);
         } catch (Exception e) {
             logger.error("***Error writing file to disk. Attempting to post payload anyways...**");
         }
         try{
             restTemplatePush.pushQMessage(message);
         }catch (Exception io){
-            logger.error("Error posting payload"+ io.getCause());
+            logger.error("Error posting payload. Will now write file to error folder...", io);
+            fileReader.writeErrorFile(message);
         }
     }
 
