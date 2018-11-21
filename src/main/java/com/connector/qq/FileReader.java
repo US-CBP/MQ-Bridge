@@ -53,9 +53,8 @@ public class FileReader {
     }
 
     private void checkAndMoveFiles(File folder, Message strContent) {
-        try (FileSystem fromFileSystem = FileSystems.getDefault();
-             BufferedWriter out =
-                     new BufferedWriter(makeFileWriter(folder, strContent, fromFileSystem))
+        try (FileWriter writer = makeFileWriter(folder, strContent);
+             BufferedWriter out = new BufferedWriter(writer)
         ) {
             TextMessage textMessage = (TextMessage) strContent;
             out.write(textMessage.getText());
@@ -66,7 +65,8 @@ public class FileReader {
         }
     }
 
-    private FileWriter makeFileWriter(File folder, Message strContent, FileSystem fromFileSystem) throws JMSException, IOException {
+    private FileWriter makeFileWriter(File folder, Message strContent) throws JMSException, IOException {
+        FileSystem fromFileSystem = FileSystems.getDefault();
         Path path = fromFileSystem.getPath(folder.getPath()
                 + File.separator
                 + strContent.getJMSMessageID().substring(4) + "APIs");
