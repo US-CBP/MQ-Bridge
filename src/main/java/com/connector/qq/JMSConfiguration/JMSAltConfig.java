@@ -1,4 +1,4 @@
-package com.connector.qq;
+package com.connector.qq.JMSConfiguration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

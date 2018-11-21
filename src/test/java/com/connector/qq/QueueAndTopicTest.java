@@ -1,12 +1,12 @@
 package com.connector.qq;
 
+import com.connector.qq.JMSConfiguration.JMSAltConfig;
 import com.ibm.mq.jms.MQQueueConnectionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
