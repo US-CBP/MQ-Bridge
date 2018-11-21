@@ -10,9 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import javax.jms.Message;
-import javax.jms.TextMessage;
-
 @Component
 @PropertySource("classpath:application.properties")
 public class RestTemplatePush {
@@ -32,18 +29,14 @@ public class RestTemplatePush {
     private String tokenUrl;
 
 
-    public void pushQMessage(Message payload){
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            MessagePayload messagePayload = new MessagePayload();
-            messagePayload.setMessagePayload(((TextMessage) payload).getText());
-            HttpHeaders headers = new HttpHeaders();
-            headers.set(API_KEY, apiValue);
-            HttpEntity<MessagePayload> request = new HttpEntity<>(messagePayload, headers);
-            restTemplate.postForEntity(baseUrl, request, String.class);
-        }catch (Exception ex){
-            logger.error("Error posting payload"+ ex.getCause());
-            ex.printStackTrace();
-        }
+    public void pushQMessage(String messageContent) {
+        RestTemplate restTemplate = new RestTemplate();
+        MessagePayload messagePayload = new MessagePayload();
+        messagePayload.setMessagePayload(messageContent);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(API_KEY, apiValue);
+        HttpEntity<MessagePayload> request = new HttpEntity<>(messagePayload, headers);
+        restTemplate.postForEntity(baseUrl, request, String.class);
+        logger.debug("message sent to !" + baseUrl);
     }
 }
