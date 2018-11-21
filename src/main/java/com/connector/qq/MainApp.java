@@ -7,16 +7,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class MainApp extends SpringBootServletInitializer  {
+public class MainApp {
 
-    /*
-     * Uncomment main method and delete SpringBootServletInitializer to package as .jar / stand alone micro-service.
-     * */
-
-   /*
     public static void main(String[] args) {
-
         SpringApplication.run(MainApp.class, args);
     }
-    */
 }
