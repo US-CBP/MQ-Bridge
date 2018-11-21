@@ -8,6 +8,7 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 import javax.jms.Message;
+import javax.jms.TextMessage;
 
 @Component
 public class QQListener {
@@ -32,7 +33,8 @@ public class QQListener {
             logger.error("***Error writing file to disk. Attempting to post payload anyways...**");
         }
         try{
-            restTemplatePush.pushQMessage(message);
+            String messageContent = ((TextMessage) message).getText();
+            restTemplatePush.pushQMessage(messageContent);
         }catch (Exception io){
             logger.error("Error posting payload. Will now write file to error folder...", io);
             fileReader.writeErrorFile(message);
