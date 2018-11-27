@@ -1,0 +1,26 @@
+rest.resource: endpoint goes here
+max.concurrent.consumers: 2
+servers.mq.host: localhost
+servers.mq.port: 1414
+servers.mq.queue-manager: QM1
+servers.mq.channel: DEV.APP.SVRCONN
+servers.mq.queue: DEV.QUEUE.1
+servers.mq.topic: DEV.BASE.TOPIC
+servers.mq.timeout: 2000
+server.port: 8888
+rest.api.value: api key goes here
+archive.on: true
+archive.folder: Path\\To\\ArchivingFoler
+failLog.on: true
+failLog.cronjob.on: true
+failLog.folder: C:\\Path\\To\\Fail\\Folder
+failLog.cronjob.task.1: cron job time 1 goes here - e.g. 0 0 * * * *
+failLog.cronjob.task.2: cron job times 2 goes here - e.g. 0 30 * * * *
+failLog.retryUntilSent: false
+rest.endpoint.configuration:
+  oauth2:
+    client:
+      grantType: client_credentials
+      clientId: {client id}
+      clientSecret: {client secret}
+      accessTokenUri: {token endpoint}

@@ -1,0 +1,119 @@
+{
+  "properties": [
+    {
+      "name": "failLog.cronjob.task.2",
+      "type": "java.lang.String",
+      "description": "Description for failLog.cronjob.task.2."
+    },
+    {
+      "name": "rest.resource",
+      "type": "java.lang.String",
+      "description": "Description for rest.resource."
+    },
+    {
+      "name": "max.concurrent.consumers",
+      "type": "java.lang.String",
+      "description": "Description for max.concurrent.consumers."
+    },
+    {
+      "name": "servers.mq.port",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.port."
+    },
+    {
+      "name": "servers.mq.queue-manager",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.queue-manager."
+    },
+    {
+      "name": "servers.mq.channel",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.channel."
+    },
+    {
+      "name": "servers.mq.queue",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.queue."
+    },
+    {
+      "name": "servers.mq.topic",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.topic."
+    },
+    {
+      "name": "servers.mq.timeout",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.timeout."
+    },
+    {
+      "name": "rest.api.value",
+      "type": "java.lang.String",
+      "description": "Description for rest.api.value."
+    },
+    {
+      "name": "archive.on",
+      "type": "java.lang.String",
+      "description": "Description for archive.on."
+    },
+    {
+      "name": "failLog.on",
+      "type": "java.lang.String",
+      "description": "Description for failLog.on."
+    },
+    {
+      "name": "failLog.cronjob.on",
+      "type": "java.lang.String",
+      "description": "Description for failLog.cronjob.on."
+    },
+    {
+      "name": "failLog.folder",
+      "type": "java.lang.String",
+      "description": "Description for failLog.folder."
+    },
+    {
+      "name": "failLog.cronjob.task.1",
+      "type": "java.lang.String",
+      "description": "Description for failLog.cronjob.task.1."
+    },
+    {
+      "name": "failLog.retryUntilSent",
+      "type": "java.lang.String",
+      "description": "Description for failLog.retryUntilSent."
+    },
+    {
+      "name": "rest.endpoint.configuration.baseUrl",
+      "type": "java.lang.String",
+      "description": "Description for rest.endpoint.configuration.baseUrl."
+    },
+    {
+      "name": "rest.endpoint.configuration.oauth2.client.grantType",
+      "type": "java.lang.String",
+      "description": "Description for rest.endpoint.configuration.oauth2.client.grantType."
+    },
+    {
+      "name": "rest.endpoint.configuration.oauth2.client.clientId",
+      "type": "java.lang.String",
+      "description": "Description for rest.endpoint.configuration.oauth2.client.clientId."
+    },
+    {
+      "name": "rest.endpoint.configuration.oauth2.client.clientSecret",
+      "type": "java.lang.String",
+      "description": "Description for rest.endpoint.configuration.oauth2.client.clientSecret."
+    },
+    {
+      "name": "rest.endpoint.configuration.oauth2.client.accessTokenUri",
+      "type": "java.lang.String",
+      "description": "Description for rest.endpoint.configuration.oauth2.client.accessTokenUri."
+    },
+    {
+      "name": "servers.mq.host",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.host."
+    },
+    {
+      "name": "archive.folder",
+      "type": "java.lang.String",
+      "description": "Description for archive.folder."
+    }
+  ]
+}

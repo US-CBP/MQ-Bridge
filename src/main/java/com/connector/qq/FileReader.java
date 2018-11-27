@@ -14,7 +14,7 @@ import javax.jms.Message;
 import javax.jms.TextMessage;
 
 @Component
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yml")
 public class FileReader {
 
     private static final Logger logger = LoggerFactory
@@ -38,7 +38,7 @@ public class FileReader {
         if (archivingToDisk) {
             logger.debug("ARCHIVING FILE");
             File destFolder = new File(IN_FOLDER);
-            checkAndMoveFiles(destFolder, strContent);
+            writeFileToFolder(destFolder, strContent);
         }
         logger.debug("************************* FILE FINISHED ************************");
     }
@@ -48,29 +48,28 @@ public class FileReader {
         if (failLogOn) {
             logger.debug("ARCHIVING FAILURE FILE");
             File destFolder = new File(ERROR_FOLDER);
-            checkAndMoveFiles(destFolder, strContent);
+            writeFileToFolder(destFolder, strContent);
         }
     }
 
-    private void checkAndMoveFiles(File folder, Message strContent) {
-        try (FileWriter writer = makeFileWriter(folder, strContent);
-             BufferedWriter out = new BufferedWriter(writer)
-        ) {
+    private void writeFileToFolder(File folder, Message strContent) {
+        try (BufferedWriter out = getBufferedWriter(folder, strContent)) {
             TextMessage textMessage = (TextMessage) strContent;
-            out.write(textMessage.getText());
+            String messageText = textMessage.getText();
+            out.write(messageText);
             out.flush();
         } catch (Exception e) {
-            logger.info("Exception saving message file"
-                    , e);
+            logger.error("Exception saving message file", e);
         }
     }
 
-    private FileWriter makeFileWriter(File folder, Message strContent) throws JMSException, IOException {
-        FileSystem fromFileSystem = FileSystems.getDefault();
-        Path path = fromFileSystem.getPath(folder.getPath()
+    private BufferedWriter getBufferedWriter(File folder, Message strContent) throws JMSException, IOException {
+        String pathToGet = folder.getPath()
                 + File.separator
-                + strContent.getJMSMessageID().substring(4) + "APIs");
-        String stingValueOfPath = String.valueOf(path);
-        return new FileWriter(stingValueOfPath);
+                + strContent.getJMSMessageID().substring(4)
+                + "APIs";
+        FileSystem fileSystem = FileSystems.getDefault();
+        Path path = fileSystem.getPath(pathToGet);
+        return Files.newBufferedWriter(path);
     }
 }

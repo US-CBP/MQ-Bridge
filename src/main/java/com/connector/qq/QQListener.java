@@ -1,6 +1,6 @@
 package com.connector.qq;
 
-import com.connector.qq.rest.RestTemplatePush;
+import com.connector.qq.rest.MessagePoster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,12 @@ public class QQListener {
     private static final Logger logger = LoggerFactory
             .getLogger(QQListener.class);
 
-    private final RestTemplatePush restTemplatePush;
+    private final MessagePoster messagePoster;
     private final FileReader fileReader;
 
     @Autowired
-    public QQListener(RestTemplatePush restTemplatePush, FileReader fileReader) {
-        this.restTemplatePush = restTemplatePush;
+    public QQListener(MessagePoster messagePoster, FileReader fileReader) {
+        this.messagePoster = messagePoster;
         this.fileReader = fileReader;
     }
 
@@ -32,10 +32,10 @@ public class QQListener {
         } catch (Exception e) {
             logger.error("***Error writing file to disk. Attempting to post payload anyways...**");
         }
-        try{
+        try {
             String messageContent = ((TextMessage) message).getText();
-            restTemplatePush.pushQMessage(messageContent);
-        }catch (Exception io){
+            messagePoster.postQMessage(messageContent);
+        } catch (Exception io) {
             logger.error("Error posting payload. Will now write file to error folder...", io);
             fileReader.writeErrorFile(message);
         }
