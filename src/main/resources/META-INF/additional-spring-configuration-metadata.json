@@ -114,6 +114,11 @@
       "name": "archive.folder",
       "type": "java.lang.String",
       "description": "Description for archive.folder."
+    },
+    {
+      "name": "servers.mq.concurrency",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.concurrency."
     }
   ]
 }

@@ -2,6 +2,7 @@ package com.connector.qq.JMSConfiguration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -17,6 +18,9 @@ public class JMSConfig {
     private final
     ConnectionFactory connectionFactory;
 
+    @Value("${servers.mq.concurrency}")
+    String concurrency;
+
     @Autowired
     public JMSConfig(@Qualifier("QueueManager") ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
@@ -26,7 +30,7 @@ public class JMSConfig {
     public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
-        factory.setConcurrency("1-1");
+        factory.setConcurrency(concurrency);
         factory.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
         return factory;
     }
