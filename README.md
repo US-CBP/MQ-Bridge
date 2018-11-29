@@ -1,13 +1,11 @@
 # WMQExtractor
 
-#### A connector piece to read messages from an IBM MQ and place them in a folder
+#### A connector piece to read messages from an IBM MQ, places them in a folder, and attempts to post. 
 
-To use it, simply:
+To run this in a development environment:
 
+* Configure dependencies
 * Change the properties files mentioned below
 * Run this package as a **Spring Boot** service (mvn spring-boot:run)
-
-
-``` Update these files before you launch
-       src\main\resources\application.properties
+* Copy the application.EXAMPLE.yml file in the resources folder to a file called application.yml. Fill in the properties as appropriate. **Do not modify the application.EXAMPLE.yml file.**
 

@@ -1,6 +1,6 @@
 package com.connector.qq.schedular;
 
-import com.connector.qq.rest.RestTemplatePush;
+import com.connector.qq.rest.MessagePoster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +10,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
+import java.util.*;
 
 @Component
 @ConditionalOnProperty("failLog.cronjob.on")
 public class RetryErrorMessagesTask {
 
-    private Logger logger = LoggerFactory.getLogger(RetryErrorMessagesTask.class);
+    private final Logger logger = LoggerFactory.getLogger(RetryErrorMessagesTask.class);
 
     @Value("${failLog.folder}")
     private String ERROR_FOLDER;
@@ -30,29 +27,25 @@ public class RetryErrorMessagesTask {
     private Boolean retryUntilSent;
 
     private final
-    RestTemplatePush restTemplatePush;
-
+    MessagePoster messagePoster;
 
     @Autowired
-    public RetryErrorMessagesTask(RestTemplatePush restTemplatePush) {
-        this.restTemplatePush = restTemplatePush;
+    public RetryErrorMessagesTask(MessagePoster messagePoster) {
+        this.messagePoster = messagePoster;
     }
 
     @Scheduled(cron = "${failLog.cronjob.task.1}")
     @Scheduled(cron = "${failLog.cronjob.task.2}")
     public void resendErrorMessages() {
-        listFilesForFolder();
-    }
-
-    private void listFilesForFolder() {
         File folder = new File(ERROR_FOLDER);
         List<File> files = folder.listFiles() == null ?
-                Collections.EMPTY_LIST : Arrays.asList(Objects.requireNonNull(folder.listFiles()));
+                new ArrayList<>() : Arrays.asList(Objects.requireNonNull(folder.listFiles()));
+
         for (final File errorFile : files) {
             if (!errorFile.isDirectory() && errorFile.isFile()) {
                 try {
-                    String content = new String(Files.readAllBytes(errorFile.toPath()));
-                    restTemplatePush.pushQMessage(content);
+                    String content = new String(Files.readAllBytes(errorFile.toPath()), StandardCharsets.UTF_8);
+                    messagePoster.postQMessage(content);
                     deleteFile(errorFile);
                 } catch (Exception e) {
                     logger.error("Failed to RESEND message " + errorFile.getName() + " !");

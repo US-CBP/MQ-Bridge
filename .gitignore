@@ -23,3 +23,6 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+### Application Properties File Should never be commited! ###
+/src/main/resources/application.yml
