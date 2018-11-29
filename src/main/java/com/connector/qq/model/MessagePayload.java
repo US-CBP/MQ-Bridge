@@ -6,6 +6,7 @@ public class MessagePayload implements Serializable {
 
     private String messagePayload;
 
+    @SuppressWarnings("unused")
     public String getMessagePayload() {
         return messagePayload;
     }
