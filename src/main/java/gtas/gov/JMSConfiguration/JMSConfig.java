@@ -3,7 +3,7 @@
  *
  * Please see LICENSE.txt for details.
  */
-package com.connector.qq.JMSConfiguration;
+package gtas.gov.JMSConfiguration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

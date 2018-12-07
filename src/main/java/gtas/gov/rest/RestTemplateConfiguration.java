@@ -3,7 +3,7 @@
  *
  * Please see LICENSE.txt for details.
  */
-package com.connector.qq.rest;
+package gtas.gov.rest;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;

@@ -3,9 +3,9 @@
  *
  * Please see LICENSE.txt for details.
  */
-package com.connector.qq;
+package gtas.gov;
 
-import com.connector.qq.rest.MessagePoster;
+import gtas.gov.rest.MessagePoster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

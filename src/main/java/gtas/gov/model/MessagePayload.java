@@ -3,7 +3,7 @@
  *
  * Please see LICENSE.txt for details.
  */
-package com.connector.qq.model;
+package gtas.gov.model;
 
 import java.io.Serializable;
 

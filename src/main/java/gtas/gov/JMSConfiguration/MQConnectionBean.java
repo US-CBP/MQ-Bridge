@@ -3,7 +3,7 @@
  *
  * Please see LICENSE.txt for details.
  */
-package com.connector.qq.JMSConfiguration;
+package gtas.gov.JMSConfiguration;
 
 import com.ibm.mq.jms.MQQueueConnectionFactory;
 import com.ibm.msg.client.wmq.WMQConstants;
