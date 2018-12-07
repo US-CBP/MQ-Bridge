@@ -3,9 +3,9 @@
  *
  * Please see LICENSE.txt for details.
  */
-package gtas.gov.schedular;
+package gov.gtas.schedular;
 
-import gtas.gov.rest.MessagePoster;
+import gov.gtas.rest.MessagePoster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

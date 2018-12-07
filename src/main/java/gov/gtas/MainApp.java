@@ -3,7 +3,7 @@
  *
  * Please see LICENSE.txt for details.
  */
-package gtas.gov;
+package gov.gtas;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

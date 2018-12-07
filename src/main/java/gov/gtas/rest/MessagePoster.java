@@ -3,9 +3,9 @@
  *
  * Please see LICENSE.txt for details.
  */
-package gtas.gov.rest;
+package gov.gtas.rest;
 
-import gtas.gov.model.MessagePayload;
+import gov.gtas.model.MessagePayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

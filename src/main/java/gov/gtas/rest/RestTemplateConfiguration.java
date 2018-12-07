@@ -3,7 +3,7 @@
  *
  * Please see LICENSE.txt for details.
  */
-package gtas.gov.rest;
+package gov.gtas.rest;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;

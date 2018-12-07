@@ -3,7 +3,7 @@
  *
  * Please see LICENSE.txt for details.
  */
-package gtas.gov.model;
+package gov.gtas.model;
 
 import java.io.Serializable;
 
