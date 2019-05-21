@@ -1,5 +1,4 @@
-rest.resource: endpoint goes here
-max.concurrent.consumers: 2
+max.concurrent.consumers: 8
 servers.mq.host: localhost
 servers.mq.port: 1414
 servers.mq.queue-manager: QM1
@@ -8,20 +7,20 @@ servers.mq.queue: DEV.QUEUE.1
 servers.mq.topic: DEV.BASE.TOPIC
 servers.mq.timeout: 2000
 servers.mq.concurrency: 1-1
+mq.connection: tcp://localhost:61616
+mq.outbound.queue: GTAS_INBOUND_Q_REDIS
+mq.concurrency: 1-1
+mq.username:
+mq.password:
+#ibm.mq.user=admin
+#ibm.mq.password=passw0rd
 server.port: 8888
-rest.api.value: api key goes here
+rest.api.value:
 archive.on: true
-archive.folder: Path\\To\\ArchivingFoler
+archive.folder: C:\\MESSAGE
 failLog.on: true
 failLog.cronjob.on: true
-failLog.folder: C:\\Path\\To\\Fail\\Folder
-failLog.cronjob.task.1: cron job time 1 goes here - e.g. 0 0 * * * *
-failLog.cronjob.task.2: cron job times 2 goes here - e.g. 0 30 * * * *
+failLog.folder: C:\\FAILEDMESSAGES
+failLog.cronjob.task.1: 5 * * * * *
+failLog.cronjob.task.2: 55 * * * * *
 failLog.retryUntilSent: false
-rest.endpoint.configuration:
-  oauth2:
-    client:
-      grantType: client_credentials
-      clientId: {client id}
-      clientSecret: {client secret}
-      accessTokenUri: {token endpoint}

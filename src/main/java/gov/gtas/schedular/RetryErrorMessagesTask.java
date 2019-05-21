@@ -5,6 +5,7 @@
  */
 package gov.gtas.schedular;
 
+import gov.gtas.FileReader;
 import gov.gtas.rest.MessagePoster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import java.util.*;
 public class RetryErrorMessagesTask {
 
     private final Logger logger = LoggerFactory.getLogger(RetryErrorMessagesTask.class);
+    private final FileReader fileReader;
 
     @Value("${failLog.folder}")
     private String ERROR_FOLDER;
@@ -31,12 +33,19 @@ public class RetryErrorMessagesTask {
     @Value("${failLog.retryUntilSent}")
     private Boolean retryUntilSent;
 
+    @Value("${archive.on}")
+    private Boolean archivingToDisk;
+
+    @Value("${archive.folder}")
+    private String IN_FOLDER;
+
     private final
     MessagePoster messagePoster;
 
     @Autowired
-    public RetryErrorMessagesTask(MessagePoster messagePoster) {
+    public RetryErrorMessagesTask(MessagePoster messagePoster, FileReader fileReader) {
         this.messagePoster = messagePoster;
+        this.fileReader = fileReader;
     }
 
     @Scheduled(cron = "${failLog.cronjob.task.1}")
@@ -45,19 +54,19 @@ public class RetryErrorMessagesTask {
         File folder = new File(ERROR_FOLDER);
         List<File> files = folder.listFiles() == null ?
                 new ArrayList<>() : Arrays.asList(Objects.requireNonNull(folder.listFiles()));
-
         for (final File errorFile : files) {
             if (!errorFile.isDirectory() && errorFile.isFile()) {
                 try {
                     String content = new String(Files.readAllBytes(errorFile.toPath()), StandardCharsets.UTF_8);
-                    messagePoster.postQMessage(content);
-                    deleteFile(errorFile);
-                } catch (Exception e) {
-                    logger.error("Failed to RESEND message " + errorFile.getName() + " !");
-                    if (!retryUntilSent) {
-                        logger.debug("Deleting failed message.");
+                    messagePoster.postQMessageWithFileName(content, errorFile.getName());
+                    if (archivingToDisk) {
+                        fileReader.archiveFile(content, errorFile.getName());
+                        deleteFile(errorFile);
+                    } else {
                         deleteFile(errorFile);
                     }
+                } catch (Exception e) {
+                    logger.error("Failed to send message ", e);
                 }
             }
         }

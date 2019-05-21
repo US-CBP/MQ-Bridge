@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import javax.jms.JMSException;
+import javax.jms.BytesMessage;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
@@ -38,7 +38,7 @@ public class FileReader {
     private Boolean failLogOn;
 
 
-    void archiveFile(Message strContent) {
+    public void archiveFile(Message strContent) {
         logger.debug("************************* FILE Received ************************");
         if (archivingToDisk) {
             logger.debug("ARCHIVING FILE");
@@ -46,6 +46,16 @@ public class FileReader {
             writeFileToFolder(destFolder, strContent);
         }
         logger.debug("************************* FILE FINISHED ************************");
+    }
+
+    public void archiveFile(String content, String fileName) {
+        File destFolder = new File(IN_FOLDER);
+        try (BufferedWriter out = getBufferedWriter(destFolder, fileName)) {
+            out.write(content);
+            out.flush();
+        } catch (Exception e) {
+            logger.error("Exception saving message file", e);
+        }
     }
 
     void writeErrorFile(Message strContent) {
@@ -58,9 +68,17 @@ public class FileReader {
     }
 
     private void writeFileToFolder(File folder, Message strContent) {
-        try (BufferedWriter out = getBufferedWriter(folder, strContent)) {
-            TextMessage textMessage = (TextMessage) strContent;
-            String messageText = textMessage.getText();
+        try (BufferedWriter out = getBufferedWriter(folder, strContent.getJMSMessageID().substring(4))) {
+            String messageText = "";
+            if (strContent instanceof BytesMessage) {
+                BytesMessage bytesMessage = (BytesMessage) strContent;
+                byte[] data = new byte[(int) bytesMessage.getBodyLength()];
+                bytesMessage.readBytes(data);
+                messageText =  new String(data);
+            } else if (strContent instanceof TextMessage) {
+                TextMessage textMessage = (TextMessage) strContent;
+                messageText = textMessage.getText();
+            }
             out.write(messageText);
             out.flush();
         } catch (Exception e) {
@@ -68,11 +86,10 @@ public class FileReader {
         }
     }
 
-    private BufferedWriter getBufferedWriter(File folder, Message strContent) throws JMSException, IOException {
+    private BufferedWriter getBufferedWriter(File folder, String strContent) throws IOException {
         String pathToGet = folder.getPath()
                 + File.separator
-                + strContent.getJMSMessageID().substring(4)
-                + "APIs";
+                + strContent;
         FileSystem fileSystem = FileSystems.getDefault();
         Path path = fileSystem.getPath(pathToGet);
         return Files.newBufferedWriter(path);

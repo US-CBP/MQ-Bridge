@@ -5,39 +5,58 @@
  */
 package gov.gtas.JMSConfiguration;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jms.annotation.EnableJms;
-import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.Session;
+import org.springframework.jms.connection.CachingConnectionFactory;
+import org.springframework.jms.core.JmsTemplate;
 
 @Configuration
 @EnableJms
+@PropertySource("classpath:application.yml")
 public class JMSConfig {
 
-    private final
-    ConnectionFactory connectionFactory;
+    @Value("${mq.connection}")
+    private String DEFAULT_BROKER_URL;
 
-    @Value("${servers.mq.concurrency}")
+    @Value("${mq.outbound.queue}")
+    private String OUTBOUND_QUEUE;
+
+    @Value("${mq.username}")
+    private String USER_NAME;
+
+    @Value("${mq.password}")
+    private String PASSWORD;
+
+    @Value("${mq.concurrency}")
     String concurrency;
 
-    @Autowired
-    public JMSConfig(@Qualifier("QueueManager") ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
+    @Bean
+    public ActiveMQConnectionFactory connectionFactory() {
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
+        connectionFactory.setBrokerURL(DEFAULT_BROKER_URL);
+        connectionFactory.setUserName(USER_NAME);
+        connectionFactory.setPassword(PASSWORD);
+        return connectionFactory;
     }
 
     @Bean
-    public DefaultJmsListenerContainerFactory jmsListenerContainerFactory() {
-        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory);
-        factory.setConcurrency(concurrency);
-        factory.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
-        return factory;
+    public CachingConnectionFactory cachingConnectionFactory() {
+        return new CachingConnectionFactory(connectionFactory());
+    }
+
+    @Bean
+    public JmsTemplate jmsTemplateJason() {
+        return new JmsTemplate(cachingConnectionFactory());
+    }
+
+    @Bean
+    public JmsTemplate jmsTemplateFile() {
+        JmsTemplate jmsTemplate = new JmsTemplate(cachingConnectionFactory());
+        jmsTemplate.setDefaultDestinationName(OUTBOUND_QUEUE);
+        return jmsTemplate;
     }
 }
-

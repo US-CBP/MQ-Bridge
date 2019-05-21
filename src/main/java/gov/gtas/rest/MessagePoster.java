@@ -5,52 +5,41 @@
  */
 package gov.gtas.rest;
 
-import gov.gtas.model.MessagePayload;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+
+import java.util.UUID;
 
 @Component
 @PropertySource("classpath:application.yml")
 public class MessagePoster {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(MessagePoster.class);
-
-    private static final String API_KEY = "x-api-key";
-
-    @Value("${rest.api.value}")
-    private String apiValue;
-    @Value("${rest.resource}")
-    private String baseUrl;
-
-    private final RestTemplate restTemplate;
+    private final
+    JmsTemplate jmsTemplateFile;
 
     @Autowired
-    public MessagePoster(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public MessagePoster(JmsTemplate jmsTemplateFile) {
+        this.jmsTemplateFile = jmsTemplateFile;
     }
 
     public void postQMessage(String messageContent) {
-        messageContent = stripNewLineAndCarriageReturn(messageContent);
-        MessagePayload messagePayload = new MessagePayload();
-        messagePayload.setMessagePayload(messageContent);
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(API_KEY, apiValue);
-        HttpEntity<MessagePayload> request = new HttpEntity<>(messagePayload, headers);
-        restTemplate.postForEntity(baseUrl, request, String.class);
-        logger.debug("message sent to !" + baseUrl);
+        jmsTemplateFile.send(session -> {
+            javax.jms.Message m = session.createObjectMessage(messageContent);
+            m.setStringProperty("filename", UUID.randomUUID().toString());
+            return m;
+        });
     }
 
-    private String stripNewLineAndCarriageReturn(String messageContent) {
-        messageContent = messageContent.replaceAll("\\n", "");
-        messageContent = messageContent.replaceAll("\\r", "");
-        return messageContent;
+
+    public void postQMessageWithFileName(String messageContent, String fileName) {
+        jmsTemplateFile.send(session -> {
+            javax.jms.Message m = session.createObjectMessage(messageContent);
+            m.setStringProperty("filename", fileName);
+            return m;
+        });
     }
 }
