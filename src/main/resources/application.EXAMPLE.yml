@@ -7,6 +7,9 @@ servers.mq.queue: DEV.QUEUE.1
 servers.mq.topic: DEV.BASE.TOPIC
 servers.mq.timeout: 2000
 servers.mq.concurrency: 1-1
+servers.mq.userAuthMqcsp: false
+servers.mq.username:
+servers.mq.password:
 mq.connection: tcp://localhost:61616
 mq.outbound.queue: GTAS_INBOUND_Q_REDIS
 mq.concurrency: 1-1
