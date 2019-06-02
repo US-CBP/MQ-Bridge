@@ -7,16 +7,13 @@ package gov.gtas;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.TextMessage;
 
 @Component
 @PropertySource("classpath:application.yml")
@@ -38,7 +35,7 @@ public class FileReader {
     private Boolean failLogOn;
 
 
-    void archiveFile(Message strContent) {
+    void archiveFile(String strContent) {
         logger.debug("************************* FILE Received ************************");
         if (archivingToDisk) {
             logger.debug("ARCHIVING FILE");
@@ -48,7 +45,7 @@ public class FileReader {
         logger.debug("************************* FILE FINISHED ************************");
     }
 
-    void writeErrorFile(Message strContent) {
+    void writeErrorFile(String strContent) {
         logger.debug("In Write Error File");
         if (failLogOn) {
             logger.debug("ARCHIVING FAILURE FILE");
@@ -57,22 +54,19 @@ public class FileReader {
         }
     }
 
-    private void writeFileToFolder(File folder, Message strContent) {
-        try (BufferedWriter out = getBufferedWriter(folder, strContent)) {
-            TextMessage textMessage = (TextMessage) strContent;
-            String messageText = textMessage.getText();
-            out.write(messageText);
+    private void writeFileToFolder(File folder, String strContent) {
+        try (BufferedWriter out = getBufferedWriter(folder)) {
+            out.write(strContent);
             out.flush();
         } catch (Exception e) {
             logger.error("Exception saving message file", e);
         }
     }
 
-    private BufferedWriter getBufferedWriter(File folder, Message strContent) throws JMSException, IOException {
+    private BufferedWriter getBufferedWriter(File folder) throws IOException {
         String pathToGet = folder.getPath()
                 + File.separator
-                + strContent.getJMSMessageID().substring(4)
-                + "APIs";
+                + UUID.randomUUID().toString();
         FileSystem fileSystem = FileSystems.getDefault();
         Path path = fileSystem.getPath(pathToGet);
         return Files.newBufferedWriter(path);
