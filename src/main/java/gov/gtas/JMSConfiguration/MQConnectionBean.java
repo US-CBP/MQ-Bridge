@@ -35,6 +35,8 @@ public class MQConnectionBean {
     private String password;
     @Value("${servers.mq.userAuthMqcsp}")
     private Boolean userAuthMqcsp;
+    @Value("${servers.mq.connectionMode}")
+    private Integer connectionMode;
 
     @Bean
     @Qualifier("QueueManager")
@@ -46,10 +48,10 @@ public class MQConnectionBean {
             mqQueueConnectionFactory.setPort(port);
             mqQueueConnectionFactory.setChannel(channel);
             mqQueueConnectionFactory.setTransportType(WMQConstants.WMQ_CM_CLIENT);
+            mqQueueConnectionFactory.setIntProperty(WMQConstants.WMQ_CONNECTION_MODE, connectionMode);
             mqQueueConnectionFactory.setStringProperty(WMQConstants.USERID, username);
             mqQueueConnectionFactory.setStringProperty(WMQConstants.PASSWORD, password);
             mqQueueConnectionFactory.setBooleanProperty(WMQConstants.USER_AUTHENTICATION_MQCSP, userAuthMqcsp);
-            mqQueueConnectionFactory.setTransportType(WMQConstants.WMQ_CM_CLIENT);
         } catch (Exception e) {
             logger.debug("Critical Error Instantiating QueueManager Bean!", e);
         }
