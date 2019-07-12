@@ -45,7 +45,7 @@ public class MessagePoster {
         headers.set(API_KEY, apiValue);
         HttpEntity<MessagePayload> request = new HttpEntity<>(messagePayload, headers);
         restTemplate.postForEntity(baseUrl, request, String.class);
-        logger.debug("message sent to !" + baseUrl);
+        logger.info("message sent to !" + baseUrl);
     }
 
     private String stripNewLineAndCarriageReturn(String messageContent) {

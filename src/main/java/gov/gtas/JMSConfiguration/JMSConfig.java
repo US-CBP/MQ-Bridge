@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.jms.connection.CachingConnectionFactory;
+import org.springframework.jms.core.JmsTemplate;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.Session;
@@ -38,6 +40,19 @@ public class JMSConfig {
         factory.setConcurrency(concurrency);
         factory.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
         return factory;
+    }
+
+
+    @Bean
+    public CachingConnectionFactory cachingConnectionFactory() {
+        return new CachingConnectionFactory(connectionFactory);
+    }
+
+    @Bean
+    public JmsTemplate jmsTemplateFile() {
+        JmsTemplate jmsTemplate = new JmsTemplate(cachingConnectionFactory());
+        jmsTemplate.setDefaultDestinationName("DEV.QUEUE.1");
+        return jmsTemplate;
     }
 }
 

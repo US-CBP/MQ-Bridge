@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -31,12 +32,14 @@ public class RetryErrorMessagesTask {
     @Value("${failLog.retryUntilSent}")
     private Boolean retryUntilSent;
 
-    private final
-    MessagePoster messagePoster;
+
+    private JmsTemplate jmsTemplateFile;
+
+
 
     @Autowired
-    public RetryErrorMessagesTask(MessagePoster messagePoster) {
-        this.messagePoster = messagePoster;
+    public RetryErrorMessagesTask(JmsTemplate jmsTemplate) {
+        this.jmsTemplateFile = jmsTemplate;
     }
 
     @Scheduled(cron = "${failLog.cronjob.task.1}")
@@ -50,7 +53,7 @@ public class RetryErrorMessagesTask {
             if (!errorFile.isDirectory() && errorFile.isFile()) {
                 try {
                     String content = new String(Files.readAllBytes(errorFile.toPath()), StandardCharsets.UTF_8);
-                    messagePoster.postQMessage(content);
+                    jmsTemplateFile.convertAndSend(content);
                     deleteFile(errorFile);
                 } catch (Exception e) {
                     logger.error("Failed to RESEND message " + errorFile.getName() + " !");
