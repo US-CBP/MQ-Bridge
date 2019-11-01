@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <camel.version>2.22.1</camel.version>
+        <camel.version>2.24.2</camel.version>
     </properties>
     <dependencies>
         <dependency>
