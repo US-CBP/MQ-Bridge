@@ -16,7 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:application.yml")
+@PropertySource(value = "file:${catalina.home}/conf/application.properties", ignoreResourceNotFound = true)
 public class FileReader {
 
     private static final Logger logger = LoggerFactory

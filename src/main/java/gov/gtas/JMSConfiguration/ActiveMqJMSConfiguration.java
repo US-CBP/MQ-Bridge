@@ -11,7 +11,7 @@ import org.springframework.jms.core.JmsTemplate;
 
 @Configuration
 @EnableJms
-@PropertySource("classpath:application.yml")
+@PropertySource(value = "file:${catalina.home}/conf/application.properties", ignoreResourceNotFound = true)
 public class ActiveMqJMSConfiguration {
 
     @Value("${mq.connection}")

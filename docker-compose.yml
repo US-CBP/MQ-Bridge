@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  mq-bridge:
+    image: wcogtas/mq-bridge:1.0.0
+    container_name: mq-bridge
+    build: 
+      context: .
+    restart: always
+    volumes:
+      - type: bind
+        source: /var/opt/mq-bridge-properties
+        target: /usr/local/tomcat/conf
+    ports:
+      - 1414:1414
+      - 8161:8161
