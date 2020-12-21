@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   mq-bridge:
-    image: wcogtas/mq-bridge:1.0.0
+    image: wcogtas/mq-bridge:1.0.2
     container_name: mq-bridge
     build: 
       context: .
