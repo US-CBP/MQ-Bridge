@@ -60,6 +60,9 @@ public class IbmMqListener {
         String contents = null;
         try {
             contents = getContentsAsString(message);
+            if (contents != null) {
+                contents = stripNewLineAndCarriageReturn(contents);
+            }
         } catch (JMSException | UnsupportedEncodingException e) {
             logger.error("Unable to get file contents", e);
         }
@@ -88,5 +91,9 @@ public class IbmMqListener {
         }
         return contents;
     }
-
+    private String stripNewLineAndCarriageReturn(String messageContent) {
+        messageContent = messageContent.replaceAll("\\n", "");
+        messageContent = messageContent.replaceAll("\\r", "");
+        return messageContent;
+    }
 }
