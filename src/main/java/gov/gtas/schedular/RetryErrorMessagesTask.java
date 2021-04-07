@@ -5,12 +5,12 @@
  */
 package gov.gtas.schedular;
 
-import gov.gtas.rest.MessagePoster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -32,11 +32,11 @@ public class RetryErrorMessagesTask {
     private Boolean retryUntilSent;
 
     private final
-    MessagePoster messagePoster;
+    JmsTemplate jmsTemplateFile;
 
     @Autowired
-    public RetryErrorMessagesTask(MessagePoster messagePoster) {
-        this.messagePoster = messagePoster;
+    public RetryErrorMessagesTask(JmsTemplate jmsTemplateFile) {
+        this.jmsTemplateFile = jmsTemplateFile;
     }
 
     @Scheduled(cron = "${failLog.cronjob.task.1}")
@@ -45,12 +45,15 @@ public class RetryErrorMessagesTask {
         File folder = new File(ERROR_FOLDER);
         List<File> files = folder.listFiles() == null ?
                 new ArrayList<>() : Arrays.asList(Objects.requireNonNull(folder.listFiles()));
-
         for (final File errorFile : files) {
             if (!errorFile.isDirectory() && errorFile.isFile()) {
                 try {
                     String content = new String(Files.readAllBytes(errorFile.toPath()), StandardCharsets.UTF_8);
-                    messagePoster.postQMessage(content);
+                    jmsTemplateFile.send(session -> {
+                        javax.jms.Message m = session.createObjectMessage(content);
+                        m.setStringProperty("filename", UUID.randomUUID().toString());
+                        return m;
+                    });
                     deleteFile(errorFile);
                 } catch (Exception e) {
                     logger.error("Failed to RESEND message " + errorFile.getName() + " !");

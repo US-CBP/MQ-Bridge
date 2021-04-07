@@ -119,6 +119,51 @@
       "name": "servers.mq.concurrency",
       "type": "java.lang.String",
       "description": "Description for servers.mq.concurrency."
+    },
+    {
+      "name": "servers.mq.connectionMode",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.connectionMode."
+    },
+    {
+      "name": "servers.mq.userAuthMqcsp",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.userAuthMqcsp."
+    },
+    {
+      "name": "servers.mq.password",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.password."
+    },
+    {
+      "name": "servers.mq.username",
+      "type": "java.lang.String",
+      "description": "Description for servers.mq.username."
+    },
+    {
+      "name": "mq.connection",
+      "type": "java.lang.String",
+      "description": "Description for mq.connection."
+    },
+    {
+      "name": "mq.outbound.queue",
+      "type": "java.lang.String",
+      "description": "Description for mq.outbound.queue."
+    },
+    {
+      "name": "mq.concurrency",
+      "type": "java.lang.String",
+      "description": "Description for mq.concurrency."
+    },
+    {
+      "name": "mq.username",
+      "type": "java.lang.String",
+      "description": "Description for mq.username."
+    },
+    {
+      "name": "mq.password",
+      "type": "java.lang.String",
+      "description": "Description for mq.password."
     }
   ]
 }
