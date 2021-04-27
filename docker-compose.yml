@@ -7,10 +7,10 @@ services:
       context: .
     restart: always
     network_mode: host
-    volumes:
-      - type: bind
-        source: /var/opt/mq-bridge-properties/conf
-        target: /usr/local/tomcat/conf
-    ports:
-      - 1414:1414
-      - 8161:8161
+#    volumes:
+#      - type: bind
+#        source: /var/opt/mq-bridge-properties/conf
+#        target: /usr/local/tomcat/conf
+#    ports:
+#      - 1414:1414
+#      - 8161:8161
